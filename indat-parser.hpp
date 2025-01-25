@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <fstream>
+#include <optional>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
@@ -73,10 +74,10 @@ class Parser {
                std::is_same<T, std::vector<int>>::value;
     }
 
-    template <typename T> T get(const std::string& param) const {
+    template <typename T> std::optional<T> get(const std::string& param) const {
         static_assert(is_supported_type<T>(), "Unsupported type");
         if (m_params.find(param) == m_params.end()) {
-            throw std::runtime_error("Parameter not found: " + param);
+            return {};
         }
 
         if constexpr (std::is_same<T, std::vector<std::string>>::value) {
